@@ -56,10 +56,13 @@ __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import streamlit as st
-from langchain.vectorstores import Chroma
+# from langchain.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma
 import chromadb
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.document_loaders import TextLoader
+# from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
+# from langchain.document_loaders import TextLoader
+from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import CharacterTextSplitter
 from huggingface_hub import InferenceClient
 import os
@@ -78,7 +81,8 @@ def load_initial_docs():
     all_docs = []
     for file in os.listdir("docs"):
         if file.endswith(".pdf"):
-            loader = TextLoader(os.path.join("docs", file))
+            # loader = TextLoader(os.path.join("docs", file))
+            loader = PyPDFLoader(os.path.join("docs", file))
             docs = loader.load()
             all_docs.extend(docs)
     return all_docs
@@ -120,13 +124,14 @@ if query:
     st.write(answer)
  
 # File uploader
-uploaded_file = st.file_uploader("Upload a .txt file", type=["txt"])
-if uploaded_file:
+uploaded_file = st.file_uploader("Upload a file")
+if uploaded_file is not None:
     temp_file_path = tempfile.NamedTemporaryFile(delete=False).name
     with open(temp_file_path, "wb") as f:
          f.write(uploaded_file.read())
           
-    loader = TextLoader(temp_file_path)
+    # loader = TextLoader(temp_file_path)
+    loader = PyPDFLoader(temp_file_path)
     new_docs = loader.load()
     new_chunks = text_splitter.split_documents(new_docs)
     vectorstore.add_documents(new_chunks)
