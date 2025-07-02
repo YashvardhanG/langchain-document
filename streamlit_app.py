@@ -151,16 +151,20 @@ from langchain.vectorstores import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 import tempfile
-import nltk
+# import nltk
 
-nltk_data_dir = os.path.join(os.getcwd(), "nltk_data")
-nltk.data.path.append(nltk_data_dir)
+# nltk_data_dir = os.path.join(os.getcwd(), "nltk_data")
+# nltk.data.path.append(nltk_data_dir)
  
-try:
-    nltk.data.find("tokenizers/punkt")
-except LookupError:
-    nltk.download("punkt", download_dir=nltk_data_dir)
-    nltk.download("punkt")
+# try:
+#     nltk.data.find("tokenizers/punkt")
+# except LookupError:
+#     nltk.download("punkt", download_dir=nltk_data_dir)
+#     nltk.download("punkt")
+
+import re
+def sent_tokenize(text):
+    return re.split(r'(?<=[.!?])\s+', text.strip())
 
 # Load Hugging Face API token from secrets
 HUGGINGFACE_TOKEN = st.secrets["huggingface_token"]
