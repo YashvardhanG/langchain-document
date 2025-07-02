@@ -147,7 +147,7 @@ import os
 import PyPDF2
 from io import BytesIO
 import streamlit as st
-#from nltk.tokenize import sent_tokenize
+from nltk.tokenize import sent_tokenize
 from huggingface_hub import InferenceClient
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
@@ -164,10 +164,12 @@ import tempfile
 # except LookupError:
 #     nltk.download("punkt", download_dir=nltk_data_dir)
 #     nltk.download("punkt")
+import nltk
+nltk.download('punkt_tab')
 
-import re
-def sent_tokenize(text):
-    return re.split(r'(?<=[.!?])\s+', text.strip())
+#import re
+#def sent_tokenize(text):
+#    return re.split(r'(?<=[.!?])\s+', text.strip())
 
 # Load Hugging Face API token from secrets
 HUGGINGFACE_TOKEN = "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"
