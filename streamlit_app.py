@@ -140,55 +140,156 @@
  
 #     st.success("Document added to knowledge base.")
 
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-import os
+# __import__('pysqlite3')
+# import sys
+# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# import os
+# import PyPDF2
+# from io import BytesIO
+# import streamlit as st
+# from nltk.tokenize import sent_tokenize
+# from huggingface_hub import InferenceClient
+# from langchain.embeddings import HuggingFaceEmbeddings
+# from langchain.vectorstores import Chroma
+# from langchain.text_splitter import RecursiveCharacterTextSplitter
+# from langchain.schema import Document
+# import tempfile
+# # import nltk
+
+# # nltk_data_dir = os.path.join(os.getcwd(), "nltk_data")
+# # nltk.data.path.append(nltk_data_dir)
+ 
+# # try:
+# #     nltk.data.find("tokenizers/punkt")
+# # except LookupError:
+# #     nltk.download("punkt", download_dir=nltk_data_dir)
+# #     nltk.download("punkt")
+# import nltk
+# nltk.download('punkt_tab')
+
+# #import re
+# #def sent_tokenize(text):
+# #    return re.split(r'(?<=[.!?])\s+', text.strip())
+
+# # Load Hugging Face API token from secrets
+# HUGGINGFACE_TOKEN = "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"
+# #HF_MODEL = "google/flan-t5-large"
+# HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.1"
+# client = InferenceClient(model=HF_MODEL, token=HUGGINGFACE_TOKEN)
+ 
+# # VectorDB directory
+# persist_dir = "chroma_db"
+ 
+# # Extract text from PDFs
+# def extract_text_from_pdf(pdf_bytes):
+#     pdf_text = ""
+#     pdf_reader = PyPDF2.PdfReader(BytesIO(pdf_bytes))
+#     for page in pdf_reader.pages:
+#         pdf_text += page.extract_text()
+#     return pdf_text
+ 
+# # Process uploaded PDFs into text
+# def process_uploaded_pdfs(docs):
+#     all_text = ""
+#     for doc in docs:
+#         if doc.type == "application/pdf":
+#             doc_text = extract_text_from_pdf(doc.read())
+#             sentences = sent_tokenize(doc_text)
+#             all_text += "\n".join(sentences) + "\n"
+#     return all_text
+ 
+# # Split and embed documents
+# def get_vectorstore_from_text(text):
+#     if not text:
+#         return None
+#     sentences = sent_tokenize(text)
+#     splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+#     chunks = splitter.create_documents(sentences)
+#     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+#     vectordb = Chroma.from_documents(chunks, embedding=embeddings, persist_directory=persist_dir)
+#     vectordb.persist()
+#     return vectordb
+ 
+# # Load preloaded docs
+# def load_base_knowledge():
+#     base_folder = "docs"
+#     all_text = ""
+#     for file_name in os.listdir(base_folder):
+#         if file_name.endswith(".pdf"):
+#             with open(os.path.join(base_folder, file_name), "rb") as f:
+#                 text = extract_text_from_pdf(f.read())
+#                 all_text += "\n".join(sent_tokenize(text)) + "\n"
+#     return get_vectorstore_from_text(all_text)
+ 
+# # Query HuggingFace Inference API
+# def query_huggingface(prompt):
+#     response = client.text_generation(prompt, max_new_tokens=512, temperature=0.7, top_p=0.95, repetition_penalty=1.1)
+#     return response.strip()
+ 
+# # Streamlit UI
+# def main():
+#     st.set_page_config(page_title="Document QA with Hugging Face", page_icon="🧠")
+#     st.title("📄 Document Question Answering (Hugging Face API)")
+ 
+#     with st.spinner("Loading base documents..."):
+#         vectorstore = load_base_knowledge()
+ 
+#     uploaded_docs = st.file_uploader("📁 Upload additional PDFs", type=["pdf"], accept_multiple_files=True)
+ 
+#     if uploaded_docs:
+#         with st.spinner("Processing uploaded documents..."):
+#             uploaded_text = process_uploaded_pdfs(uploaded_docs)
+#             uploaded_db = get_vectorstore_from_text(uploaded_text)
+#             if uploaded_db:
+#                 #vectorstore.merge_from(uploaded_db)
+#                 new_docs = uploaded_db.similarity_search("")
+#                 vectorstore.add_documents(new_docs)
+#                 vectorstore.persist()
+ 
+#     user_question = st.text_input("Ask a question:")
+#     if user_question and vectorstore:
+#         docs = vectorstore.similarity_search(user_question, k=4)
+#         context = "\n\n".join([doc.page_content for doc in docs])
+#         prompt = f"""Answer the following question based on the provided context.
+ 
+#                      Context:
+#                      {context}
+                      
+#                      Question: {user_question}
+#                      Answer:"""
+ 
+#         with st.spinner("Generating answer..."):
+#             answer = query_huggingface(prompt)
+#             st.markdown("### 🧠 Answer:")
+#             st.write(answer)
+ 
+# if __name__ == "__main__":
+#     main()
+
 import PyPDF2
 from io import BytesIO
 import streamlit as st
+from dotenv import load_dotenv
+from langchain import HuggingFaceHub
+from langchain.llms import HuggingFacePipeline
 from nltk.tokenize import sent_tokenize
-from huggingface_hub import InferenceClient
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import Chroma
+from langchain.vectorstores import FAISS  
+from langchain.embeddings import HuggingFaceEmbeddings 
+from langchain.chains.question_answering import load_qa_chain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document
-import tempfile
-# import nltk
 
-# nltk_data_dir = os.path.join(os.getcwd(), "nltk_data")
-# nltk.data.path.append(nltk_data_dir)
- 
-# try:
-#     nltk.data.find("tokenizers/punkt")
-# except LookupError:
-#     nltk.download("punkt", download_dir=nltk_data_dir)
-#     nltk.download("punkt")
 import nltk
 nltk.download('punkt_tab')
 
-#import re
-#def sent_tokenize(text):
-#    return re.split(r'(?<=[.!?])\s+', text.strip())
 
-# Load Hugging Face API token from secrets
-HUGGINGFACE_TOKEN = "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"
-#HF_MODEL = "google/flan-t5-large"
-HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.1"
-client = InferenceClient(model=HF_MODEL, token=HUGGINGFACE_TOKEN)
- 
-# VectorDB directory
-persist_dir = "chroma_db"
- 
-# Extract text from PDFs
 def extract_text_from_pdf(pdf_bytes):
     pdf_text = ""
     pdf_reader = PyPDF2.PdfReader(BytesIO(pdf_bytes))
     for page in pdf_reader.pages:
         pdf_text += page.extract_text()
     return pdf_text
- 
-# Process uploaded PDFs into text
+
+
 def process_uploaded_pdfs(docs):
     all_text = ""
     for doc in docs:
@@ -197,73 +298,65 @@ def process_uploaded_pdfs(docs):
             sentences = sent_tokenize(doc_text)
             all_text += "\n".join(sentences) + "\n"
     return all_text
- 
-# Split and embed documents
-def get_vectorstore_from_text(text):
-    if not text:
+
+
+def get_vectorstore(chunks):
+    embeddings = HuggingFaceEmbeddings()
+    if not chunks:
         return None
-    sentences = sent_tokenize(text)
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    chunks = splitter.create_documents(sentences)
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    vectordb = Chroma.from_documents(chunks, embedding=embeddings, persist_directory=persist_dir)
-    vectordb.persist()
-    return vectordb
- 
-# Load preloaded docs
+    return FAISS.from_documents(chunks, embeddings)
+
+
 def load_base_knowledge():
-    base_folder = "docs"
+    base_folder = "./data"
     all_text = ""
     for file_name in os.listdir(base_folder):
         if file_name.endswith(".pdf"):
-            with open(os.path.join(base_folder, file_name), "rb") as f:
+            file_path = os.path.join(base_folder, file_name)
+            with open(file_path, "rb") as f:
                 text = extract_text_from_pdf(f.read())
                 all_text += "\n".join(sent_tokenize(text)) + "\n"
-    return get_vectorstore_from_text(all_text)
- 
-# Query HuggingFace Inference API
-def query_huggingface(prompt):
-    response = client.text_generation(prompt, max_new_tokens=512, temperature=0.7, top_p=0.95, repetition_penalty=1.1)
-    return response.strip()
- 
-# Streamlit UI
+
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    chunks = text_splitter.create_documents(sent_tokenize(all_text))
+    return get_vectorstore(chunks)
+
+
 def main():
-    st.set_page_config(page_title="Document QA with Hugging Face", page_icon="🧠")
-    st.title("📄 Document Question Answering (Hugging Face API)")
- 
-    with st.spinner("Loading base documents..."):
-        vectorstore = load_base_knowledge()
- 
-    uploaded_docs = st.file_uploader("📁 Upload additional PDFs", type=["pdf"], accept_multiple_files=True)
- 
-    if uploaded_docs:
-        with st.spinner("Processing uploaded documents..."):
-            uploaded_text = process_uploaded_pdfs(uploaded_docs)
-            uploaded_db = get_vectorstore_from_text(uploaded_text)
-            if uploaded_db:
-                #vectorstore.merge_from(uploaded_db)
-                new_docs = uploaded_db.similarity_search("")
-                vectorstore.add_documents(new_docs)
-                vectorstore.persist()
- 
-    user_question = st.text_input("Ask a question:")
-    if user_question and vectorstore:
-        docs = vectorstore.similarity_search(user_question, k=4)
-        context = "\n\n".join([doc.page_content for doc in docs])
-        prompt = f"""Answer the following question based on the provided context.
- 
-                     Context:
-                     {context}
-                      
-                     Question: {user_question}
-                     Answer:"""
- 
-        with st.spinner("Generating answer..."):
-            answer = query_huggingface(prompt)
-            st.markdown("### 🧠 Answer:")
-            st.write(answer)
- 
-if __name__ == "__main__":
+    load_dotenv()
+    os.environ["HUGGINGFACEHUB_API_TOKEN"] = "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"
+
+    st.set_page_config(page_title="Document AI", page_icon="⚙️")
+    st.header("Document AI")
+
+    st.write("Loading Dataset")
+    base_db = load_base_knowledge()
+
+    uploaded_pdfs = st.file_uploader("📁 Upload Document (optional)", type=["pdf"], accept_multiple_files=True)
+    
+    final_db = base_db
+
+    if uploaded_pdfs:
+        uploaded_text = process_uploaded_pdfs(uploaded_pdfs)
+        sentences = sent_tokenize(uploaded_text)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        new_chunks = text_splitter.create_documents(sentences)
+        new_db = get_vectorstore(new_chunks)
+
+        if new_db:
+            base_db.merge_from(new_db)
+            final_db = base_db
+
+    user_question = st.text_input("Enter your prompt here:")
+
+    if user_question and final_db:
+        docs = final_db.similarity_search(user_question)
+        llm = HuggingFacePipeline.from_model_id(model_id="google/flan-t5-large", task="text2text-generation", model_kwargs={"temperature": 0.7, "max_length": 512})
+        chain = load_qa_chain(llm, chain_type="stuff")
+        response = chain.run(input_documents=docs, question=user_question)
+        st.markdown("#### 📖 Answer:")
+        st.write(response)
+
+
+if __name__ == '__main__':
     main()
-
-
