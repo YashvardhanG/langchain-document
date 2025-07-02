@@ -170,7 +170,7 @@ def sent_tokenize(text):
     return re.split(r'(?<=[.!?])\s+', text.strip())
 
 # Load Hugging Face API token from secrets
-HUGGINGFACE_TOKEN = st.secrets["huggingface_token"]
+HUGGINGFACE_TOKEN = "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"
 HF_MODEL = "google/flan-t5-large"
 client = InferenceClient(model=HF_MODEL, token=HUGGINGFACE_TOKEN)
  
