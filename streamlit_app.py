@@ -54,7 +54,8 @@
 
 
 import streamlit as st
-from langchain.vectorstores import FAISS
+from langchain.vectorstores import Chroma
+import chromadb
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import CharacterTextSplitter
@@ -83,7 +84,9 @@ def load_initial_docs():
 # Setup vectorstore from documents
 text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 all_docs = text_splitter.split_documents(load_initial_docs())
-vectorstore = FAISS.from_documents(all_docs, embedding_model)
+# vectorstore = FAISS.from_documents(all_docs, embedding_model)
+persist_dir = "chroma_db"
+vectorstore = Chroma.from_documents(documents = all_docs, embedding = embedding_model, persist_directory = persist_dir)
  
 # Function to query HuggingFace Inference API
 def query_huggingface(prompt):
@@ -125,5 +128,6 @@ if uploaded_file:
     new_docs = loader.load()
     new_chunks = text_splitter.split_documents(new_docs)
     vectorstore.add_documents(new_chunks)
+    vectorstore.persist()
  
     st.success("Document added to knowledge base.")
