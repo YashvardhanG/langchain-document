@@ -176,7 +176,7 @@ def process_uploaded_pdfs(docs):
     all_text = ""
     for doc in docs:
         if doc.type == "application/pdf":
-doc_text = extract_text_from_pdf(doc.read())
+            doc_text = extract_text_from_pdf(doc.read())
             sentences = sent_tokenize(doc_text)
             all_text += "\n".join(sentences) + "\n"
     return all_text
@@ -200,7 +200,7 @@ def load_base_knowledge():
     for file_name in os.listdir(base_folder):
         if file_name.endswith(".pdf"):
             with open(os.path.join(base_folder, file_name), "rb") as f:
-text = extract_text_from_pdf(f.read())
+                text = extract_text_from_pdf(f.read())
                 all_text += "\n".join(sent_tokenize(text)) + "\n"
     return get_vectorstore_from_text(all_text)
  
