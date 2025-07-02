@@ -267,6 +267,7 @@
 #     main()
 
 import PyPDF2
+import os
 from io import BytesIO
 import streamlit as st
 from dotenv import load_dotenv
