@@ -152,9 +152,16 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 import tempfile
 import nltk
+
+nltk_data_dir = os.path.join(os.getcwd(), "nltk_data")
+nltk.data.path.append(nltk_data_dir)
  
-nltk.download("punkt")
- 
+try:
+    nltk.data.find("tokenizers/punkt")
+except LookupError:
+    nltk.download("punkt", download_dir=nltk_data_dir)
+    nltk.download("punkt")
+
 # Load Hugging Face API token from secrets
 HUGGINGFACE_TOKEN = st.secrets["huggingface_token"]
 HF_MODEL = "google/flan-t5-large"
