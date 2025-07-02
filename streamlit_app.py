@@ -1,19 +1,17 @@
-import PyPDF2
 import os
-from io import BytesIO
 import streamlit as st
+import PyPDF2
+import nltk
+from io import BytesIO
 from dotenv import load_dotenv
-from langchain import HuggingFaceHub
-from langchain.llms import HuggingFacePipeline
+# from langchain import HuggingFaceHub
+from langchain_community.llms import HuggingFacePipeline, HuggingFaceHub
 from nltk.tokenize import sent_tokenize
-from langchain.vectorstores import FAISS  
-from langchain.embeddings import HuggingFaceEmbeddings 
+from langchain_community.vectorstores import FAISS  
+from langchain_community.embeddings import HuggingFaceEmbeddings 
 from langchain.chains.question_answering import load_qa_chain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-
-import nltk
 nltk.download('punkt_tab')
-
 
 def extract_text_from_pdf(pdf_bytes):
     pdf_text = ""
@@ -34,7 +32,7 @@ def process_uploaded_pdfs(docs):
 
 
 def get_vectorstore(chunks):
-    embeddings = HuggingFaceEmbeddings()
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     if not chunks:
         return None
     return FAISS.from_documents(chunks, embeddings)
