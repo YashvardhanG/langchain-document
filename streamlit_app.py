@@ -173,7 +173,8 @@ nltk.download('punkt_tab')
 
 # Load Hugging Face API token from secrets
 HUGGINGFACE_TOKEN = "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"
-HF_MODEL = "google/flan-t5-large"
+#HF_MODEL = "google/flan-t5-large"
+HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.1"
 client = InferenceClient(model=HF_MODEL, token=HUGGINGFACE_TOKEN)
  
 # VectorDB directory
