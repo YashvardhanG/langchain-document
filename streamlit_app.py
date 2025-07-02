@@ -57,8 +57,8 @@ def load_base_knowledge():
 
 def main():
     load_dotenv()
-    # os.environ["HUGGINGFACEHUB_API_TOKEN"] = "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"
-    os.environ["HUGGINGFACEHUB_API_TOKEN"] = st.secrets["huggingface_token"]
+    os.environ["HUGGINGFACEHUB_API_TOKEN"] = "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"
+    # os.environ["HUGGINGFACEHUB_API_TOKEN"] = st.secrets["huggingface_token"]
 
     st.set_page_config(page_title="Document AI", page_icon="⚙️")
     st.header("Document AI")
