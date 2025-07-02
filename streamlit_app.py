@@ -140,6 +140,9 @@
  
 #     st.success("Document added to knowledge base.")
 
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import os
 import PyPDF2
 from io import BytesIO
