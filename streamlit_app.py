@@ -309,7 +309,7 @@ def get_vectorstore(chunks):
 
 
 def load_base_knowledge():
-    base_folder = "/data"
+    base_folder = "docs"
     all_text = ""
     for file_name in os.listdir(base_folder):
         if file_name.endswith(".pdf"):
