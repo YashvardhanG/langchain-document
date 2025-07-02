@@ -147,7 +147,7 @@ import os
 import PyPDF2
 from io import BytesIO
 import streamlit as st
-from nltk.tokenize import sent_tokenize
+#from nltk.tokenize import sent_tokenize
 from huggingface_hub import InferenceClient
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
