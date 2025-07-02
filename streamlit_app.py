@@ -222,7 +222,7 @@ def load_base_knowledge():
  
 # Query HuggingFace Inference API
 def query_huggingface(prompt):
-    response = client.text_generation(prompt, max_new_tokens=512, temperature=0.7, top_p=0.95)
+    response = client.text_generation(prompt, max_new_tokens=512, temperature=0.7, top_p=0.95, repetition_penalty=1.1)
     return response.strip()
  
 # Streamlit UI
