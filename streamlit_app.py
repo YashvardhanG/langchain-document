@@ -83,8 +83,8 @@ def main():
 
     if user_question and final_db:
         docs = final_db.similarity_search(user_question)
-        # llm = HuggingFacePipeline.from_model_id(model_id="google/flan-t5-large", task="text2text-generation", model_kwargs={"max_length": 512})
-        llm = HuggingFacePipeline.from_model_id(model_id="HuggingFaceH4/zephyr-7b-beta", task="text2text-generation", model_kwargs={"temperature": 0.7, "max_new_tokens": 256, "top_p": 0.95})
+        llm = HuggingFacePipeline.from_model_id(model_id="google/flan-t5-large", task="text2text-generation", model_kwargs={"max_length": 512})
+        # llm = HuggingFacePipeline.from_model_id(model_id="HuggingFaceH4/zephyr-7b-beta", task="text2text-generation", model_kwargs={"temperature": 0.7, "max_new_tokens": 256, "top_p": 0.95})
         chain = load_qa_chain(llm, chain_type="stuff")
         response = chain.run(input_documents=docs, question=user_question)
         st.markdown("#### 📖 Answer:")
