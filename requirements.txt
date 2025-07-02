@@ -6,3 +6,4 @@ transformers
 sentence-transformers
 pypdf2
 langchain-community
+protobuf==3.20.*
