@@ -74,7 +74,7 @@ embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 def load_initial_docs():
     all_docs = []
     for file in os.listdir("docs"):
-        if file.endswith(".txt"):
+        if file.endswith(".pdf"):
             loader = TextLoader(os.path.join("docs", file))
             docs = loader.load()
             all_docs.extend(docs)
@@ -102,11 +102,11 @@ if query:
     context = "\n\n".join([doc.page_content for doc in docs])
  
     full_prompt = f"""You are an expert AI assistant. Answer the question based on the following context:
+                      
+                      {context}
  
-{context}
- 
-Question: {query}
-Answer:"""
+                      Question: {query}
+                      Answer:"""
  
     with st.spinner("Thinking..."):
         answer = query_huggingface(full_prompt)
@@ -119,8 +119,8 @@ uploaded_file = st.file_uploader("Upload a .txt file", type=["txt"])
 if uploaded_file:
     temp_file_path = tempfile.NamedTemporaryFile(delete=False).name
     with open(temp_file_path, "wb") as f:
-f.write(uploaded_file.read())
- 
+         f.write(uploaded_file.read())
+          
     loader = TextLoader(temp_file_path)
     new_docs = loader.load()
     new_chunks = text_splitter.split_documents(new_docs)
