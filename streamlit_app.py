@@ -239,7 +239,7 @@ def main():
             uploaded_db = get_vectorstore_from_text(uploaded_text)
             if uploaded_db:
                 #vectorstore.merge_from(uploaded_db)
-                new_docs = uploaded_db.similarity_search("")  # or however you retrieve all docs
+                new_docs = uploaded_db.similarity_search("")  # or however you retrieve all docs
                 vectorstore.add_documents(new_docs)
                 vectorstore.persist()
  
