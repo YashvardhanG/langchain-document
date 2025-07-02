@@ -246,16 +246,16 @@ def main():
         context = "\n\n".join([doc.page_content for doc in docs])
         prompt = f"""Answer the following question based on the provided context.
  
-Context:
-{context}
- 
-Question: {user_question}
-Answer:"""
+                     Context:
+                     {context}
+                      
+                     Question: {user_question}
+                     Answer:"""
  
         with st.spinner("Generating answer..."):
             answer = query_huggingface(prompt)
-        st.markdown("### 🧠 Answer:")
-        st.write(answer)
+            st.markdown("### 🧠 Answer:")
+            st.write(answer)
  
 if __name__ == "__main__":
     main()
