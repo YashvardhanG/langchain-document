@@ -4,6 +4,7 @@ chromadb
 huggingface_hub
 transformers
 sentence-transformers
+pypdf
 pypdf2
 langchain-community
 protobuf==3.20.*
