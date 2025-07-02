@@ -71,7 +71,7 @@ import tempfile
 # Load secrets
 HUGGINGFACE_TOKEN = st.secrets["huggingface_token"]
 # HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.1"
-HF_MODEL = "tiiuae/falcon-7b-instruct"
+HF_MODEL = "google/flan-t5-base"
 client = InferenceClient(model=HF_MODEL, token=HUGGINGFACE_TOKEN)
  
 # Load embedding model
