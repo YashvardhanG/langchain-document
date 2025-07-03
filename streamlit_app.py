@@ -65,14 +65,13 @@ def main():
     # with col2:
     #     st.header("Document AI")
 
-    st.markdown(
-        """
-        <div style="display: flex; align-items: center;">
-            <img src="BH_Logo_Horizontal_White.png" width="250" style="margin-right: 10px;">
-            <h1 style="margin: 0;">Document AI</h1>
-        </div>
-        """,
-        unsafe_allow_html=True
+    st.markdown("""
+                <div style="display: flex; align-items: center;">
+                     <img src="BH_Logo_Horizontal_White.png" width="250" style="margin-right: 10px;">
+                     <h1 style="margin: 0;">Document AI</h1>
+                </div>
+            """,
+            unsafe_allow_html=True
     )
 
     status_holder = st.empty()
