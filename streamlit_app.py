@@ -61,7 +61,7 @@ def main():
 
     col1, col2 = st.columns([1,5])
     with col1:
-        st.image("BH_Logo_Horizontal_White.png", width = 50)
+        st.image("BH_Logo_Horizontal_White.png", width = 250)
     with col2:
         st.header("Document AI")
 
