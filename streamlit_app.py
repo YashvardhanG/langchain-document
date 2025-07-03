@@ -59,20 +59,11 @@ def main():
     os.environ["HUGGINGFACEHUB_API_TOKEN"] = st.secrets["huggingface_token"]
     st.set_page_config(page_title="Document AI", page_icon="⚙️")
 
-    # col1, col2 = st.columns([1,5])
-    # with col1:
-    #     st.image("BH_Logo_Horizontal_White.png", width = 250)
-    # with col2:
-    #     st.header("Document AI")
-
-    st.markdown("""
-                <div style="display: flex; align-items: center;">
-                     <img src="BH_Logo_Horizontal_White.png" width="250" style="margin-right: 10px;">
-                     <h1 style="margin: 0;">Document AI</h1>
-                </div>
-            """,
-            unsafe_allow_html=True
-    )
+    col1, col2 = st.columns([1,3])
+    with col1:
+        st.image("BH_Logo_Horizontal_White.png", width = 300)
+    with col2:
+        st.header("Document AI")
 
     status_holder = st.empty()
     status_holder.write("⌛ Loading Dataset")
