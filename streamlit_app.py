@@ -66,7 +66,7 @@ def main():
     #     st.header("Document AI")
 
     # st.image("BH_Logo_Horizontal_White.png", width = 150)
-    st.logo("BH_Logo_Horizontal_White.png", *, size="medium", link=None, icon_image=None)
+    st.logo("BH_Logo_Horizontal_White.png", size="medium", link=None, icon_image=None)
     st.header("Document AI")
     
     status_holder = st.empty()
