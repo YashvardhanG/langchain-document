@@ -2,6 +2,7 @@ import os
 import streamlit as st
 import PyPDF2
 import nltk
+import time
 from io import BytesIO
 from dotenv import load_dotenv
 # from langchain import HuggingFaceHub
@@ -59,8 +60,12 @@ def main():
     st.set_page_config(page_title="Document AI", page_icon="⚙️")
     st.header("Document AI")
 
-    st.write("Dataset Loaded")
+    status_holder = st.empty()
+    status_holder.write("Loading Dataset")
     base_db = load_base_knowledge()
+    status_holder.write("Dataset Loaded")
+    time.sleep(5)
+    status_holder.empty()
 
     uploaded_pdfs = st.file_uploader("📁 Upload Document (optional)", type=["pdf"], accept_multiple_files=True)
     
