@@ -58,12 +58,17 @@ def main():
     load_dotenv()
     os.environ["HUGGINGFACEHUB_API_TOKEN"] = st.secrets["huggingface_token"]
     st.set_page_config(page_title="Document AI", page_icon="⚙️")
-    st.header("Document AI")
+
+    col1, col2 = st.columns([1,5])
+    with col1:
+        st.image("BH_Logo_Horizontal_White.png", width = 50)
+    with col2:
+        st.header("Document AI")
 
     status_holder = st.empty()
-    status_holder.write("Loading Dataset")
+    status_holder.write("⌛ Loading Dataset")
     base_db = load_base_knowledge()
-    status_holder.write("Dataset Loaded")
+    status_holder.write("✅ Dataset Loaded")
     time.sleep(5)
     status_holder.empty()
 
